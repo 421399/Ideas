@@ -78,31 +78,36 @@ public class RegisterActivity extends Activity implements OnClickListener,
 
 		initSDK();
 
+		//点击获取验证码按钮
 		btn_register_code.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				SMSSDK.getVerificationCode("China", phone);
+				SMSSDK.getVerificationCode("86", phone);
+				btn_register_code.setClickable(false);
 			}
 		});
 
+		//点击注册按钮
 		btn_register.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				SMSSDK.submitVerificationCode("China", phone, code);
+				SMSSDK.submitVerificationCode("86", phone, code);
+				btn_register_code.setClickable(true);
 			}
 		});
 
+		//点击已有账号按钮
 		txt_register_login.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(RegisterActivity.this,
-						FindPasswordActivity.class);
+						ResetPasswordActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -111,9 +116,6 @@ public class RegisterActivity extends Activity implements OnClickListener,
 	@Override
 	public boolean handleMessage(Message msg) {
 		// TODO Auto-generated method stub
-		edt_register_name = (EditText) findViewById(R.id.edt_register_name);
-		edt_register_phone = (EditText) findViewById(R.id.edt_register_phone);
-		edt_register_pw = (EditText) findViewById(R.id.edt_register_pw);
 		final String name = edt_register_name.getText().toString();
 		final String phone = edt_register_phone.getText().toString();
 		final String pw = edt_register_pw.getText().toString();

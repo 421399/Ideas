@@ -1,5 +1,18 @@
 package com.example.ideas;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Connection;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,12 +64,12 @@ public class LoginActivity extends Activity {
 				if(pw.equals("")){
 					Toast.makeText(getApplicationContext(), "密码不能为空", Toast.LENGTH_SHORT).show();
 				}
-				if(btn_login.login(u, phone, pw)){
+				if(login(u, phone, pw).equals("success")){
 					Toast.makeText(getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
 					Intent intent = new Intent(LoginActivity.this,);
 					startActivity(intent);
 				}else
-					Toast.makeText(getApplicationContext(), "密码错误", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), login(u,phone,pw), Toast.LENGTH_SHORT).show();
 			}
 		});
 		
@@ -81,5 +94,43 @@ public class LoginActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+	}
+
+	public String login(String urlString, String phone, String pw) throws JSONException {
+		try {
+			URL url = new URL(urlString);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setConnectTimeout(1000);
+			// 设定传送的内容类型是可序列化的java对象
+			// (如果不设此项,在传送序列化对象时,当WEB服务默认的不是这种类型时可能抛java.io.EOFException)
+			conn.setRequestProperty("Content-Type", "text/*;charset=utf-8");
+			DataOutputStream outputStream = new DataOutputStream(
+					conn.getOutputStream());
+			JSONObject user = new JSONObject();
+			user.put("phone", phone);
+			user.put("password", pw);
+			outputStream.writeBytes(user.toString());
+			outputStream.flush();
+			conn.connect();
+
+			conn.setRequestMethod("Get");
+			conn.setConnectTimeout(1000);
+			conn.setReadTimeout(1000);
+			InputStream in = conn.getInputStream();
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(in));
+			StringBuilder response = new StringBuilder();
+			String line;
+			while ((line = reader.readLine()) != null) {
+				response.append(line);
+			}
+			return response.toString();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

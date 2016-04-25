@@ -126,7 +126,7 @@ public class RegisterActivity extends Activity implements OnClickListener,
 			if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
 				// 短信注册成功
 				Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
-				btn_register_code.sendMessage(url, name, phone, pw);
+				btn_register_code.post(url, name, phone, pw);
 				Intent intent = new Intent(this, LoginActivity.class);
 				startActivity(intent);
 			} else {

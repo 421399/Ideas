@@ -43,7 +43,7 @@ public class ResetPasswordActivity extends Activity implements OnClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_resetpw);
+		setContentView(R.layout.activity_resetpassword);
 
 		edt_reset_phone = findViewById(R.id.edt_reset_phone);
 		edt_reset_code = findViewById(R.id.edt_reset_code);
@@ -130,7 +130,7 @@ public class ResetPasswordActivity extends Activity implements OnClickListener,
 			if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
 				// 修改成功
 				Toast.makeText(this, "修改成功", Toast.LENGTH_SHORT).show();
-				btn_reset_code.sendMessage(url, phone , pw);
+				btn_reset_code.post(url, phone , pw);
 				Intent intent = new Intent(this, LoginActivity.class);
 				startActivity(intent);
 			} else {
